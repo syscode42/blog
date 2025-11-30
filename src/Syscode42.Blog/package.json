@@ -1,0 +1,17 @@
+{
+	"name": "syscode42.blog",
+	"version": "1.0.0",
+	"main": "index.js",
+	"scripts": {
+		"watch": "npx @tailwindcss/cli -i ./Themes/app.css -o ./wwwroot/css/app.css --watch",
+		"build": "npx @tailwindcss/cli -i ./Themes/app.css -o ./wwwroot/css/app.min.css --minify"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"description": "",
+	"dependencies": {
+		"@tailwindcss/cli": "^4.1.17",
+		"tailwindcss": "^4.1.17"
+	}
+}
