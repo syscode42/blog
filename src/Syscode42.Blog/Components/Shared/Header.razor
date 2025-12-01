@@ -1,0 +1,62 @@
+﻿@using Syscode42.Blog.Models
+@using System.ComponentModel
+
+<header class="border-muted bg-background sticky top-0 z-10 flex h-16 w-full shrink-0 border-b px-6 sm:h-28 md:h-32 md:flex-col md:space-y-6 lg:h-36 xl:px-24">
+	<div class="flex w-full items-center justify-between py-2 md:mx-auto md:w-full md:max-w-3xl xl:max-w-4xl">
+		<a href="/" class="pt-4">
+			<img src="/images/dark-logo.png" class="w-20 sm:w-36 lg:w-44" />
+		</a>
+
+		<div class="text-primary flex items-center gap-6">
+			<a href="#" class="pt-4 hover:text-sky-500 hover:underline">
+				Sobre
+			</a>
+			<a href="#" class="pt-4 hover:text-sky-500 hover:underline">
+				Contato
+			</a>
+		</div>
+	</div>
+	<div class="hidden gap-6 md:flex md:items-center md:justify-center md:pt-2">
+		@foreach (var post in PostsFilters)
+		{
+			<button @onclick="(() => SelectPostFilter(post))"
+					class="relative py-3 text-sm hover:text-sky-500
+		                @(post == SelectedFilterEnum ? "font-semibold text-accent" : "text-primary")">
+				@GetPostEnumDescription(post)
+
+				@if (post == SelectedFilterEnum)
+				{
+					<span class="bg-accent absolute right-0 -bottom-1 left-0 h-1 rounded"></span>
+				}
+			</button>
+		}
+	</div>
+</header>
+
+@code {
+    [Parameter]
+    public List<PostFilterEnum> PostsFilters { get; set; } = new()
+    {
+        PostFilterEnum.AllPosts,
+        PostFilterEnum.Trending,
+        PostFilterEnum.MostRecents,
+        PostFilterEnum.OlderPosts,
+        PostFilterEnum.MostLiked
+    };
+
+    PostFilterEnum SelectedFilterEnum = PostFilterEnum.AllPosts;
+    void SelectPostFilter(PostFilterEnum filter) => SelectedFilterEnum = filter;
+
+	string GetPostEnumDescription(PostFilterEnum filter)
+	{
+		var field = filter.GetType().GetField(filter.ToString());
+
+		if (field == null)
+			return filter.ToString();
+
+		var attribute = Attribute.GetCustomAttribute(field, 
+			typeof(DescriptionAttribute)) as DescriptionAttribute;
+
+		return attribute?.Description ?? filter.ToString();
+	}
+}
